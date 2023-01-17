@@ -100,6 +100,7 @@ include_once('./include/class_filehandle.php');
 include_once('./include/class_rapport.php');
 include_once('./include/class_show.php');
 include_once('./include/class_settings.php');
+require_once ('./include/class_ldap.php');
 include_once('./include/class_pdfgenerate.php');
 require_once('./include/class_table.php');
 include("./include/time_funktionen.php");
@@ -114,9 +115,10 @@ if (isset($_GET['calc']) and $_GET['calc']) {
 // ----------------------------------------------------------------------------
 // Modler allgemeine Daten laden
 // ----------------------------------------------------------------------------
-$_users    = new time_filehandle("./Data/", "users.txt", ";");
-$_groups   = new time_filehandle("./Data/", "group.txt", ";");
 $_settings = new time_settings();
+$_ldap     = new time_ldap($_settings);
+$_users    = $_ldap->_enabled ? $_ldap->_users : new time_filehandle("./Data/","users.txt",";");
+$_groups   = $_ldap->_enabled ? $_ldap->_groups : new time_filehandle("./Data/","group.txt",";");
 $_template = new time_template("index.php");
 $_template->_user01 = "sites_admin/admin01.php";
 $_template->_user02 = "sites_login/login_mehr_02.php";

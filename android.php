@@ -64,10 +64,12 @@ if($login){
 	include_once ('./include/class_rapport.php');
 	include_once ('./include/class_show.php');
 	include_once ('./include/class_settings.php');
+	require_once ('./include/class_ldap.php');
 	include ("./include/time_funktionen.php");
-	$_users    = new time_filehandle("./Data/","users.txt",";");
-	$_groups   = new time_filehandle("./Data/","group.txt",";");
 	$_settings = new time_settings();
+	$_ldap     = new time_ldap($_settings);
+	$_users    = $_ldap->_enabled ? $_ldap->_users : new time_filehandle("./Data/","users.txt",";");
+	$_groups   = $_ldap->_enabled ? $_ldap->_groups : new time_filehandle("./Data/","group.txt",";");
 	$_time     = new time();
 	$_time->set_monatsname($_settings->_array[11][1]);
 	$_user     = new time_user();

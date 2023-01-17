@@ -7,16 +7,21 @@
 * www.it-master.ch / info@it-master.ch
 * Copyright (c), IT-Master, All rights reserved
 *******************************************************************************/
+require_once ('./include/class_settings.php');
+require_once ('./include/class_ldap.php');
+
 class time_group
 {
+	private $_settings = new time_settings();
+	private $_ldap = new time_ldap($_settings);
 	private $_filename = "./Data/group.txt";
 	public 	$_array = NULL;
 	function __construct($_grpwahl)
 	{
 		if($_grpwahl >= 0)
 		{
-			$_groups = new time_filehandle("./Data/","group.txt",";" );
-			$_users  = new time_filehandle("./Data/","users.txt",";" );
+			$_users    = $_ldap->_enabled ? $_ldap->_users : new time_filehandle("./Data/","users.txt",";");
+			$_groups   = $_ldap->_enabled ? $_ldap->_groups : new time_filehandle("./Data/","group.txt",";");
 			for($x = 1; $x < count($_groups->_array); $x++)
 			{
 				$tmpgrp = explode(",",$_groups->_array[$x][2]);

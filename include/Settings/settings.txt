@@ -27,3 +27,8 @@ Landeseinstellung (Bundes - Feiertag)#1#Landeseinstellung f&uuml;r den Bundes - 
 <img src='images/icons/group_key.png' border='0'> Admin Komplett#1#Admin kann alles editieren (Stempelzeit, Zeiten hinzuf&uuml;gen, Abwesenheit, Rapport) auch wenn deaktiviert
 <img src='images/icons/group_key.png' border='0'> Absenz Berechnung#1#nur bis zum heutigen Tag Absenzen berechnen
 <img src='images/icons/group_key.png' border='0'> Absenz Berechnung#1#Arbeitszeit wird von der Absenz abgezogen. Mit dieser Einstellung könnten Ferien in Überzeit umgewandelt werden. Bitte beachten Sie die gesetzlichen Richtlinien!
+LDAP-Server#ldaps://dc-01.intra.example.com#Wenn LDAP gar nicht genutzt werden soll, dann muss dieses Feld leer bleiben
+LDAP-Port#636#
+LDAP-CN#CN=SmallTime,CN=Users,DC=intra,DC=example,DC=com#für anonymen Zugriff leer lassen
+LDAP-PW#example.com#für anonymen Zugriff leer lassen
+LDAP-DN#DC=intra,DC=example,DC=com#
