@@ -12,12 +12,14 @@ require_once ('./include/class_ldap.php');
 
 class time_group
 {
-	private $_settings = new time_settings();
-	private $_ldap = new time_ldap($_settings);
+	private $_settings;
+	private $_ldap;
 	private $_filename = "./Data/group.txt";
 	public 	$_array = NULL;
 	function __construct($_grpwahl)
 	{
+		$_settings = new time_settings();
+		$_ldap = new time_ldap($_settings->array);
 		if($_grpwahl >= 0)
 		{
 			$_users    = $_ldap->_enabled ? $_ldap->_users : new time_filehandle("./Data/","users.txt",";");

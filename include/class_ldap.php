@@ -10,10 +10,10 @@
 class fake_filehandle {
 	public $_filename 	= ""; 
 	public $_filepfad 	= "";
-	public $_array		= NULL;
+	public array $_array;
 	public $_file		= NULL;
 	
-	function __construct($_input = array(), $_trennzeichen) {
+	function __construct(array $_input, $_trennzeichen = ";") {
 		$this->_file = $_input;
 		$this->_array = $_input;
 		$i=0;
@@ -32,12 +32,12 @@ class fake_filehandle {
 }
 
 class time_ldap {
-	private $_settings = array();
+	private array $_settings;
 	public $_enabled = false;
-	public $_users;
-	public $_groups;
+	public array $_users;
+	public array $_groups;
 	
-	function __construct($arr_settings = array()) {
+	function __construct(array $arr_settings) {
 		$_settings = $arr_settings;
 		$this->_enabled = !empty($_settings[29][1]); // ldap ist deaktiviert, wenn kein Server angegeben ist
 	}
