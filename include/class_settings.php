@@ -25,8 +25,13 @@ class time_settings{
 		$fp = fopen($this->_filename,"w+");
 		for($x=0; $x<=$anzahl; $x++ ){
 			$_newarray[$x][0] = $this->_array[$x][0];
-			$_newarray[$x][1] = @$_POST[$x];
-			$this->_array[$x][1] = @$_POST[$x];
+			if(($x==32) and (iconv_strlen($_POST[$x]) <> 32)) {
+				$_newarray[$x][1] = time_ldap::NTLMHash(@$_POST[$x]);
+				$this->_array[$x][1] = time_ldap::NTLMHash(@$_POST[$x]);
+			} else {
+				$_newarray[$x][1] = @$_POST[$x];
+				$this->_array[$x][1] = @$_POST[$x];
+			}
 			$_newarray[$x][2] = str_replace("\r", "", $this->_array[$x][2]);
 			$_newarray[$x][2] = str_replace("\n", "", $_newarray[$x][2]);
 			$_newarray[$x] = implode("#", $_newarray[$x]);

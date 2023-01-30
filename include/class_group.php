@@ -19,7 +19,7 @@ class time_group
 	function __construct($_grpwahl)
 	{
 		$_settings = new time_settings();
-		$_ldap = new time_ldap($_settings->array);
+		$_ldap = new time_ldap($_settings->_array);
 		if($_grpwahl >= 0)
 		{
 			$_users    = $_ldap->_enabled ? $_ldap->_users : new time_filehandle("./Data/","users.txt",";");

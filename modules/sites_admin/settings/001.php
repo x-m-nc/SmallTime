@@ -29,7 +29,7 @@ foreach($_settings->_array as $_zeile){
 	//Webseiten - Einstellungen
 	//------------------------------------------------------------------------------------
 	$_anzeige = $_anzeige . "<tr width=50%>";
-	if($y<12){
+	if(($y<12) or ($y>=29 and $y<=33)){
 		$_anzeige = $_anzeige . "<td class='td_background_tag' align=left width=180>". $_zeile[0] . "</td>";
 		$_anzeige = $_anzeige . '<td class="td_background_tag"><input class="biginput" type="text" name="'.$y.'" value="'.$_zeile[1].'" size="74"></td>';
 		$_anzeige = $_anzeige . "<td class='td_background_tag'><img title='".$_zeile[2]."' src='images/icons/information.png' border=0></td></tr>";

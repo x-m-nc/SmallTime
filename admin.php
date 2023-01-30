@@ -116,7 +116,7 @@ if (isset($_GET['calc']) and $_GET['calc']) {
 // Modler allgemeine Daten laden
 // ----------------------------------------------------------------------------
 $_settings = new time_settings();
-$_ldap     = new time_ldap($_settings);
+$_ldap     = new time_ldap($_settings->_array);
 $_users    = $_ldap->_enabled ? $_ldap->_users : new time_filehandle("./Data/","users.txt",";");
 $_groups   = $_ldap->_enabled ? $_ldap->_groups : new time_filehandle("./Data/","group.txt",";");
 $_template = new time_template("index.php");
