@@ -33,13 +33,29 @@ class fake_filehandle {
 
 class time_ldap {
 	private array $_settings;
+	private $_ds;
 	public $_enabled = false;
 	public $_users;
 	public $_groups;
 	
 	function __construct(array $arr_settings) {
-		$_settings = $arr_settings;
-		$this->_enabled = !empty($_settings[29][1]); // ldap ist deaktiviert, wenn kein Server angegeben ist
+		$this->_settings = $arr_settings;
+		$this->_enabled = !empty($this->_settings[29][1]); // ldap ist deaktiviert, wenn kein Server angegeben ist
+		
+		// für ldaps ist das Root-Zertifikat des Domänkontrollers erforderlich (base64 encoded)
+		// für Testzwecke kann es "local" abgelegt werden, ansonsten im Zertifikatsspeicher
+		// putenv('LDAPTLS_CACERT=./AD-CA-CERT.pem');
+		// ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7); // Einkommentieren für detailierte Debug-Meldungen im error.log
+		$this->_ds = ldap_connect($this->_settings[29][1]);
+		
+		// Prüfen ob (annonyme) Verbindung zum DC möglich ist
+		if ($this->_ds) {
+			$this->_enabled = ldap_bind($this->_ds);
+			
+			// create user & group arrays
+		} else {
+			$this->_enabled = false;
+		}
 	}
 	
 	public static function NTLMHash($_input) {
@@ -60,13 +76,6 @@ class time_ldap {
 		return($NTLMHash);
 	}
 	
-	function bind() {
-		
-	}
-	
-	function unbind() {
-	}
-	
-	function check($POST) {
+	function check($_input) {
 	}
 }
