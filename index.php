@@ -94,8 +94,7 @@ include_once ('./include/class_feiertage.php');
 include_once ('./include/class_filehandle.php');
 include_once ('./include/class_rapport.php');
 include_once ('./include/class_show.php');
-require_once ('./include/class_settings.php');
-require_once ('./include/class_ldap.php');
+include_once ('./include/class_settings.php');
 require_once ('./include/class_table.php');
 include ("./include/time_funktionen.php");
 //$controller = new time_controller();
@@ -110,10 +109,9 @@ if(isset($_GET['calc'])){
 // ----------------------------------------------------------------------------
 // Modler allgemeine Daten laden
 // ----------------------------------------------------------------------------
+$_users    = new time_filehandle("./Data/","users.txt",";");
+$_groups   = new time_filehandle("./Data/","group.txt",";");
 $_settings = new time_settings();
-$_ldap     = new time_ldap($_settings->_array);
-$_users    = $_ldap->_enabled ? $_ldap->_users : new time_filehandle("./Data/","users.txt",";");
-$_groups   = $_ldap->_enabled ? $_ldap->_groups : new time_filehandle("./Data/","group.txt",";");
 $_template = new time_template("index.php");
 $_template->set_portal(1);
 $_favicon  = "./images/favicon.ico";
