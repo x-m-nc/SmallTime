@@ -29,7 +29,7 @@ function my_session_start(){
 	}
 	return session_start();
 }
-define('DEBUG', false);
+define('DEBUG', true);
 if(DEBUG == true){
 	error_reporting(E_ALL);
 	//error_reporting(E_ALL ^ E_NOTICE);
@@ -94,7 +94,8 @@ include_once ('./include/class_feiertage.php');
 include_once ('./include/class_filehandle.php');
 include_once ('./include/class_rapport.php');
 include_once ('./include/class_show.php');
-include_once ('./include/class_settings.php');
+require_once ('./include/class_settings.php');
+require_once ('./include/class_ldap.php');
 require_once ('./include/class_table.php');
 include ("./include/time_funktionen.php");
 //$controller = new time_controller();
@@ -112,6 +113,7 @@ if(isset($_GET['calc'])){
 $_users    = new time_filehandle("./Data/","users.txt",";");
 $_groups   = new time_filehandle("./Data/","group.txt",";");
 $_settings = new time_settings();
+$_ldap     = new time_ldap($_settings->_array);
 $_template = new time_template("index.php");
 $_template->set_portal(1);
 $_favicon  = "./images/favicon.ico";
@@ -206,8 +208,7 @@ switch($_action){
 			$_infotext = getinfotext('Neue Passw&ouml;rter nicht identisch','alert-error');
 		}elseif(sha1($_POST['old']) <> $_SESSION['passwort'] and $_POST['old'] <> ""){
 			$_infotext = getinfotext('Altes Passwort nicht korrekt','alert-error');
-		}else{
-			$_infotext = getinfotext('Neues Passwort wurde gespeichert','alert-error');
+		} else {
 			$tmpusers  = file("./Data/users.txt");
 			for($u = 0; $u <= count($tmpusers); $u++){
 				$zeilen = explode(";", $tmpusers[$u]);
@@ -219,6 +220,12 @@ switch($_action){
 			$open= fopen("./Data/users.txt","w+");
 			fwrite ($open, $neu);
 			fclose($open);
+			
+			if ($_ldap->change_password($_user->_loginname, $_POST['old'], $_POST['new1'])) {
+				$_infotext = getinfotext('Neues Passwort wurde gespeichert','alert-error');
+			} else {
+				$_infotext = getinfotext('Neues Passwort wurde lokal gespeichert, aber nicht im ldap Verzeichnis aktualisiert.','alert-error');
+			}
 		}
 	}else{
 		$_infotext = getinfotext('Passwort ver&auml;ndern','td_background_top');

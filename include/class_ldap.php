@@ -7,36 +7,10 @@
 * www.x-michael.com / info@x-michael.com
 * Copyright (c), IT-Master, All rights reserved
 *******************************************************************************/
-class fake_filehandle {
-	public $_filename 	= ""; 
-	public $_filepfad 	= "";
-	public array $_array;
-	public $_file		= NULL;
-	
-	function __construct(array $_input, $_trennzeichen = ";") {
-		$this->_file = $_input;
-		$this->_array = $_input;
-		$i=0;
-		foreach($this->_array as $zeile){
-			if(strpos($zeile, $_trennzeichen)){
-				$this->_array[$i] = explode($_trennzeichen, $this->_array[$i]);
-				$z=0;
-				foreach($this->_array[$i] as $spalte){
-					$this->_array[$i][$z] = trim($spalte);
-					$z++;
-				}
-			}
-			$i++;
-		}
-	}
-}
-
 class time_ldap {
 	private array $_settings;
 	private $_ds;
 	public $_enabled = false;
-	public $_users;
-	public $_groups;
 	
 	function __construct(array $arr_settings) {
 		$this->_settings = $arr_settings;
@@ -45,37 +19,66 @@ class time_ldap {
 		// für ldaps ist das Root-Zertifikat des Domänkontrollers erforderlich (base64 encoded)
 		// für Testzwecke kann es "local" abgelegt werden, ansonsten im Zertifikatsspeicher
 		// putenv('LDAPTLS_CACERT=./AD-CA-CERT.pem');
-		// ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7); // Einkommentieren für detailierte Debug-Meldungen im error.log
+		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7); // Einkommentieren für detailierte Debug-Meldungen im error.log
 		$this->_ds = ldap_connect($this->_settings[29][1]);
 		
 		// Prüfen ob (annonyme) Verbindung zum DC möglich ist
 		if ($this->_ds) {
 			$this->_enabled = ldap_bind($this->_ds);
 			
-			// create user & group arrays
+			ldap_set_option($this->_ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 		} else {
 			$this->_enabled = false;
 		}
 	}
 	
-	public static function NTLMHash($_input) {
-		// NTLM / AD Hash
-		// Quelle: Kommentar von CraquePipe auf https://www.php.net/manual/de/ref.hash.php
-		
-		// Convert the password from UTF8 to UTF16 (little endian)
-		$_input=iconv('UTF-8','UTF-16LE',$_input);
-
-		// You could use this instead, but mhash works on PHP 4 and 5 or above
-		// The hash function only works on 5 or above
-		$MD4Hash=hash('md4',$_input);
-
-		// Make it uppercase, not necessary, but it's common to do so with NTLM hashes
-		$NTLMHash=strtoupper($MD4Hash);
-
-		// Return the result
-		return($NTLMHash);
+	function __destruct() {
+		ldap_close($this->_ds);
 	}
 	
-	function check($_input) {
+	function login(string $_username, string $_password) {
+		// melde dich mit den Anmeldedaten aus Benutzername und Passwort an und gib zurück ob es erfolgreich war
+		if ($this->enabled) {
+			@ldap_unbind($his->ds);
+			@ldap_bind($this->ds, "CN=" . $_username . "," . $this->_settings[31][1], $_password);
+		} else {
+			return(false);
+		}
+	}
+	
+	function change_password(string $_username, string $_oldpassword, string $_newpassword) {
+		// ändere das Passwort von Benutzer
+		if ($this->enabled) {		
+			if(@ldap_bind($this->ds, "CN=" . $_username . "," . $this->_settings[31][1], $_oldpassword)) {
+				// Construct the new password
+				$_newpassword_enc = "{SHA}" . base64_encode(sha1($_newpassword, true));
+    
+				// Set the new password in the LDAP directory
+				$ldap_entry = array("userPassword" => $_newpassword_enc);
+				return(!ldap_modify($this->_ds, "CN=" . $_username . "," . $this->_settings[31][1], $ldap_entry));
+			} else {
+				return(false);
+			}
+		} else {
+			return(false);
+		}
+	}
+	
+	function get_userpassword() {
+		if ($this->enabled) {
+	// Search for the user entry and retrieve the userPassword attribute
+    $search_filter = "(cn={$username})";
+    $search_attributes = array("userPassword");
+    $ldap_search = ldap_search($ldap_conn, $ldap_base_dn, $search_filter, $search_attributes);
+    if (!$ldap_search) {
+        return false;
+    }
+    
+    $ldap_entries = ldap_get_entries($ldap_conn, $ldap_search);
+    if ($ldap_entries['count'] !== 1) {
+        return false;
+    }
+    
+    $password_hash = $ldap_entries[0]['userpassword'][0];
 	}
 }
