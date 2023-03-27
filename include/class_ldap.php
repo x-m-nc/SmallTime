@@ -38,47 +38,48 @@ class time_ldap {
 	
 	function login(string $_username, string $_password) {
 		// melde dich mit den Anmeldedaten aus Benutzername und Passwort an und gib zurück ob es erfolgreich war
-		if ($this->enabled) {
-			@ldap_unbind($his->ds);
-			@ldap_bind($this->ds, "CN=" . $_username . "," . $this->_settings[31][1], $_password);
-		} else {
-			return(false);
+		$_bind_result = false;
+		if ($this->_enabled) {
+			$_bind_result = ldap_bind($this->_ds, "CN=" . $_username . "," . $this->_settings[31][1], $_password);
 		}
+		return $_bind_result;
 	}
 	
 	function change_password(string $_username, string $_oldpassword, string $_newpassword) {
 		// ändere das Passwort von Benutzer
-		if ($this->enabled) {		
-			if(@ldap_bind($this->ds, "CN=" . $_username . "," . $this->_settings[31][1], $_oldpassword)) {
+		$_ldap_modify_result = false;
+		if ($this->_enabled) {
+			$_bind_result = @ldap_bind($this->_ds, "CN=" . $_username . "," . $this->_settings[31][1], $_oldpassword);
+			if($_bind_result) {
 				// Construct the new password
 				$_newpassword_enc = "{SHA}" . base64_encode(sha1($_newpassword, true));
     
 				// Set the new password in the LDAP directory
-				$ldap_entry = array("userPassword" => $_newpassword_enc);
-				return(!ldap_modify($this->_ds, "CN=" . $_username . "," . $this->_settings[31][1], $ldap_entry));
-			} else {
-				return(false);
+				$_ldap_entry = array("userPassword" => $_newpassword_enc);
+				$_ldap_modify_result = ldap_modify($this->_ds, "CN=" . $_username . "," . $this->_settings[31][1], $_ldap_entry);
 			}
-		} else {
-			return(false);
 		}
+		return $_ldap_modify_result;
 	}
 	
-	function get_userpassword() {
-		if ($this->enabled) {
-	// Search for the user entry and retrieve the userPassword attribute
-    $search_filter = "(cn={$username})";
-    $search_attributes = array("userPassword");
-    $ldap_search = ldap_search($ldap_conn, $ldap_base_dn, $search_filter, $search_attributes);
-    if (!$ldap_search) {
-        return false;
-    }
-    
-    $ldap_entries = ldap_get_entries($ldap_conn, $ldap_search);
-    if ($ldap_entries['count'] !== 1) {
-        return false;
-    }
-    
-    $password_hash = $ldap_entries[0]['userpassword'][0];
+	function get_userpassword($_username) {
+		if ($this->_enabled) {
+			// Search for the user entry and retrieve the userPassword attribute
+			$_search_filter = "(cn={$_username})";
+			$_search_attributes = array("userPassword");
+			$_ldap_search = ldap_search($this->_ds, $this->_settings[31][1], $_search_filter, $_search_attributes);
+			if (!$_ldap_search) {
+				return false;
+			} else {   
+				$_ldap_entries = ldap_get_entries($this->_ds, $_ldap_search);
+				if ($_ldap_entries['count'] !== 1) {
+					return false;
+				} else {
+					return $_ldap_entries[0]['userpassword'][0];
+				}
+			}
+		} else {
+			return false;
+		}
 	}
 }
