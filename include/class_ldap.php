@@ -19,7 +19,7 @@ class time_ldap {
 		// für ldaps ist das Root-Zertifikat des Domänkontrollers erforderlich (base64 encoded)
 		// für Testzwecke kann es "local" abgelegt werden, ansonsten im Zertifikatsspeicher
 		// putenv('LDAPTLS_CACERT=./AD-CA-CERT.pem');
-		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7); // Einkommentieren für detailierte Debug-Meldungen im error.log
+		//ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7); // Einkommentieren für detailierte Debug-Meldungen im error.log
 		$this->_ds = ldap_connect($this->_settings[29][1]);
 		
 		// Prüfen ob (annonyme) Verbindung zum DC möglich ist
