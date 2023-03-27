@@ -150,7 +150,34 @@ if($_COOKIE["lname"] and $_COOKIE["lpass"] and $_settings->_array[19][1] == "0" 
 }
 // Loginformular - Datenüberprüfung
 if(isset($_POST['login'])){
-	$_logcheck->login($_POST, $_users->_array);
+	if ($_ldap->_enabled) {
+		$_ldap_result = $_ldap->login(trim($_POST['_n']), trim($_POST['_p']));
+		if ($_ldap_result) {
+			// just overwrite local pw with ldap hash
+			$_ldaphash = $_ldap->get_userpassword($zeilen[1]);
+			if ($_ldaphash) {
+				$tmpusers  = file("./Data/users.txt");
+				for($u = 0; $u <= count($tmpusers); $u++){
+					$zeilen = explode(";", $tmpusers[$u]);
+					if($zeilen[1] == trim($_POST['_n'])){
+						$tmpusers[$u] = $zeilen[0] . ";" . $zeilen[1] . ";" . $_ldaphash . ";";
+					}
+				}
+				$neu = implode( "", $tmpusers);
+				$open= fopen("./Data/users.txt","w+");
+				fwrite ($open, $neu);
+				fclose($open);
+			}
+			$_logcheck = new time_login($_POST, $_users->_array);
+		} else {
+			$_logcheck->rapport(trim($_POST['_n']), 'Anmeldung an ldap-Server fehlgeschlagen, falsche Benutzerdaten', "Fehler");
+			$_logcheck->logout();
+			header("Location: index.php");
+			exit();
+		}
+	} else {
+		$_logcheck = new time_login($_POST, $_users->_array);
+	}
 }
 if(isset($_GET['action']) && $_GET['action'] == "logout"){
 	$_logcheck->logout();
@@ -206,7 +233,8 @@ switch($_action){
 	if(isset($_POST['senden'])){
 		if($_POST['new1'] <> $_POST['new2']  OR $_POST['new1'] == "" OR $_POST['new2'] == ""){
 			$_infotext = getinfotext('Neue Passw&ouml;rter nicht identisch','alert-error');
-		}elseif(sha1($_POST['old']) <> $_SESSION['passwort'] and $_POST['old'] <> ""){
+		}elseif(((sha1($_POST['old']) <> $_SESSION['passwort']) or
+		         ($_ldap->_enabled and !$_ldap->login($_user->loginname, $_POST('old')))) and $_POST['old'] <> ""){
 			$_infotext = getinfotext('Altes Passwort nicht korrekt','alert-error');
 		} else {
 			$tmpusers  = file("./Data/users.txt");
