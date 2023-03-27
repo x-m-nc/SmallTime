@@ -7,9 +7,6 @@
 * www.it-master.ch / info@it-master.ch
 * Copyright (c), IT-Master, All rights reserved
 *******************************************************************************/
-require_once ('./include/class_settings.php');
-require_once('./include/class_ldap.php');
-
 class time_login{
 	public $_id		= "";
 	public $_datenpfad	= "";
@@ -17,12 +14,8 @@ class time_login{
 	public $_passwort	= "";
 	public $_login 		= false;
 	public $_admins	= false; 	//nur Admins einloggen, dann true setzten nach erstellen einer Instanz
-	private $_settings;
-	private $_ldap;
 	
-	function __construct(){	
-		$_settings = new time_settings();
-		$_ldap     = new time_ldap($_settings->_array);
+	function __construct(){
 	}
 	
 	function login($POST,$userlist){
@@ -46,15 +39,6 @@ class time_login{
 				// automatische Anmeldung über Cookies
 				$this->_username 	= $_COOKIE["lname"];
 				$this->_passwort 	= $_COOKIE["lpass"];
-			}
-		}
-		
-		// if ldap enabled then check there first
-		if ($_ldap->enabled) {
-			if (!$_ldap->login($this->_username, trim($_POST['_p']))) {
-				// unset, login to ldap failed;
-				$this->_passwort = "";
-				$this->rapport($this->_username, "Fehler bei LDAP Authentifizierung", "Fehler");
 			}
 		}
 		$this->check($userlist);
