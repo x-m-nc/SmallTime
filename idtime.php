@@ -32,6 +32,14 @@ Sie werden nach 2 Sekunden automatisch weitergeleitet.
 //          ./modules/sites_admin/admin04_idtime_generate.php angepasst werden!
 //
 $idtime_secret = 'CHANGEME'; // [./0-9A-Za-z] Mehr als 21 Zeichen führen dazu, dass das Benutzer-Passwort nicht mehr in die ID-Generierung einfliesst.	
+// Zeitzone setzten, damit die Stunden richtig ausgerechnet werden
+date_default_timezone_set("Europe/Paris");
+@setlocale(LC_TIME, 'de_DE.UTF-8', 'de_DE@euro', 'de_DE', 'de-DE', 'de', 'ge', 'de_DE.UTF-8', 'German');
+//Memory - ab ca. 15 Usern auf 32 stellen, ab 30 auf 64 und ab 60 auf 128M usw.
+@ini_set('memory_limit', '32M');
+// Microtime für die Seitenanzeige (Geschwindigkeit des Seitenaufbaus)
+$_start_time = explode(" ", microtime());
+$_start_time = $_start_time[1] + $_start_time[0];
 // -----------------------------------------------------------------------------
 // Benutzerdaten in Array ( ID => Pfad ) lesen:
 $_stempelid = array();

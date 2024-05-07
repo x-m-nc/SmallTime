@@ -8,6 +8,18 @@
 * www.it-master.ch / info@it-master.ch
 * Copyright (c), IT-Master, All rights reserved
 *******************************************************************************/
+
+
+// Zeitzone setzten, damit die Stunden richtig ausgerechnet werden
+date_default_timezone_set("Europe/Paris");
+@setlocale(LC_TIME, 'de_DE.UTF-8', 'de_DE@euro', 'de_DE', 'de-DE', 'de', 'ge', 'de_DE.UTF-8', 'German');
+//Memory - ab ca. 15 Usern auf 32 stellen, ab 30 auf 64 und ab 60 auf 128M usw.
+@ini_set('memory_limit', '32M');
+// Microtime für die Seitenanzeige (Geschwindigkeit des Seitenaufbaus)
+$_start_time = explode(" ", microtime());
+$_start_time = $_start_time[1] + $_start_time[0];
+
+
 $_grpwahl = '2';
 $gruppe = 2;
 if (isset($_GET['gruppe'])) {

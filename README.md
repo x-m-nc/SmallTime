@@ -4,7 +4,7 @@ Infos zu Installation und Bedienung: [http://www.small.li/](http://www.small.li/
 
 ## Server - Voraussetzungen
 * PHP Version 8 wird nun unterstützt.
-* Webserver selber installiert? Extension php-xml nicht vergessen zu installieren
+* Webserver selber installiert? Extension php-xml & php-zip nicht vergessen zu installieren
 
 ## Administrator-Zugang
 * Benutzername: <b>admin</b>
@@ -32,3 +32,32 @@ Infos zu Installation und Bedienung: [http://www.small.li/](http://www.small.li/
 * Schreibrechte auf Ordner setzen in der neuen Version
 * ./include/Settings -> Dateien der alten Version in die neue kopieren
 * ./Data -> alle Ordner und Dateien der alten Version in die neue kopieren
+
+
+## UBUNTU - Installation - TIPPS
+
+### Installation
+* [Ubuntu - Apache 2.4](https://wiki.ubuntuusers.de/Apache_2.4/)
+* [Ubuntu - PHP Installation](https://wiki.ubuntuusers.de/PHP/)
+* [PHP 8.3 auf Ubuntu 22.04 installieren](https://www.erikdonner.dev/2023/12/29/php-8-3-auf-ubuntu-22-04-installieren/)
+* [Ubuntu PHP ZIP Extension](https://www.itsolutionstuff.com/post/ubuntu-php-zip-extension-install-commands-exampleexample.html?utm_content=cmp-true)
+
+
+### Berechtigungen
+* sudo chown www-data /var/www/html -R
+* sudo chgrp www-data /var/www/html -R
+* sudo chmod 750 /var/www/html/Data -R
+* sudo chmod 750 /var/www/html/import -R
+* sudo chmod 750 /var/www/html/debug -R
+* sudo chmod 750 /var/www/html/include/Settings -R
+* sudo apt install php-xml php-zip
+* sudo service apache2 restart
+
+
+## Error
+Alle Meldungen können angezeigt werden, wenn DEBUG auf **true** gestellt wird.
+
+* index.php - Zeile:34 = define('DEBUG', **false**);
+* admin.php - Zeile:34 = define('DEBUG', **false**);
+
+
