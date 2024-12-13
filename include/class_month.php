@@ -62,6 +62,13 @@ class time_month
 		$this->set_letzterTag($lastday);
 		$this->set_timetable_daten($ordnerpfad, $jahr, $monat);
 		$tmp = new time_feiertage($jahr, $SettingCountry, $this->_u_feiertage);
+		// [x]: Nationalfeiertag deaktiviert? dann nicht anzeigen:
+		if($this->_u_feiertage[0] == 0){
+			if(isset($tmp->_feiertage['Bundesfeier'])) unset($tmp->_feiertage['Bundesfeier']);
+			if(isset($tmp->_feiertage['Tag der deutschen Einheit'])) unset($tmp->_feiertage['Tag der deutschen Einheit']);
+			if(isset($tmp->_feiertage['österreichische Nationalfeiertag'])) unset($tmp->_feiertage['österreichische Nationalfeiertag']);
+			if(isset($tmp->_feiertage['Staatsfeiertag in Liechtenstein'])) unset($tmp->_feiertage['Staatsfeiertag in Liechtenstein']);
+		}
 		$this->_feiertage = $tmp->_feiertage;
 		$this->_absenz = new time_absenz($ordnerpfad, $jahr);
 		$this->_arbeitszeit = $arbeitszeit;
