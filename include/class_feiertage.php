@@ -217,11 +217,12 @@ class time_feiertage
 	}
 	public function getFirstAdventSunday($year)
 	{
-		$firstAdvent = new DateTime();
-		$firstAdvent->setISODate($year, 26, 7);
-		$firstAdvent->modify('first Sunday of December');
-		//return $firstAdvent->format('d.m.Y');
-		//return $firstAdvent;
+		// December 25th is Christmas. Advent begins four Sundays before Christmas.
+		$christmas = new DateTime("$year-12-25");
+		// Find the Sunday before December 25th (inclusive).
+		$firstSundayBeforeChristmas = $christmas->modify('last Sunday');
+		// Move back 3 more Sundays to get the first Advent Sunday.
+		$firstAdvent = $firstSundayBeforeChristmas->modify('-3 weeks');
 		return $firstAdvent->getTimestamp();
 	}
 }
