@@ -3,7 +3,7 @@
 * Automatische Pausenregelung für Mitarbeiter 
 * werden von den Arbeitszeiten abgezogen
 /*******************************************************************************
-* Version 0.9.1
+* Version 0.9.200
 * Author:  IT-Master
 * www.it-master.ch / info@it-master.ch
 * Copyright (c), IT-Master, All rights reserved
@@ -52,6 +52,7 @@ class pausen{
 	}
 	public static function save(){
 		$meldung = "";
+		$pausen = [];
 		// ----------------------------------------------------------------------------
 		// $pausen = get_pausen();
 		// ----------------------------------------------------------------------------

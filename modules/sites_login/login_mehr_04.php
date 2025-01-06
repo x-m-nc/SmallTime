@@ -2,7 +2,7 @@
 /********************************************************************************
 * Small Time
 /*******************************************************************************
-* Version 0.9.020
+* Version 0.9.200
 * Author:  IT-Master
 * www.it-master.ch / info@it-master.ch
 * Copyright (c), IT-Master, All rights reserved
@@ -130,13 +130,13 @@ function setAdmin(){
 }
 
 //vSettings - Einstellungen : Anwesenheitsliste anzeigen
-if($_settings->_array[13][1] OR $_SESSION['admin']){
+if($_settings->_array[13][1] OR @$_SESSION['admin']){
 	//template unsterstützt Bootstrap
 	if(strstr($_template->_bootstrap,'true')){
 		//-------------------------------------------------------------------------------------------------------------
 		// Anzeige der Anwesenheitsliste
 		//-------------------------------------------------------------------------------------------------------------
-		if(!$_grpwahl) $_grpwahl = 1;
+		if(!isset($_grpwahl) OR !$_grpwahl) $_grpwahl = 1;
 		if($_grpwahl == -1)$_grpwahl = 1;
 		$_group = new time_group($_grpwahl);
 		if(@$id) $_grpwahl = $_group->get_usergroup($id);

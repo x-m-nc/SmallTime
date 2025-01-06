@@ -13,6 +13,7 @@ debug/*
 
 js/js_bak
 .vscode/*
+.ddev/*
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/

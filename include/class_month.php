@@ -3,7 +3,7 @@
 /*******************************************************************************
 * Monatsberechnungen
 /*******************************************************************************
-* Version 0.9.126
+* Version 0.9.200
 * Author: IT-Master
 * www.it-master.ch / info@it-master.ch
 * Copyright (c), IT-Master, All rights reserved
@@ -199,10 +199,10 @@ class time_month
 			$this->_MonatsArray[$i][16] = "";
 			$this->_MonatsArray[$i][17] = 0;
 			if ($tmp && count($tmp)) {
-				$this->_MonatsArray[$i][14] = $tmp[1];
-				$this->_MonatsArray[$i][15] = floatval($tmp[2]); // Anzahl der Absenz
-				$this->_MonatsArray[$i][16] = $tmp[3];
-				$this->_MonatsArray[$i][17] = floatval($tmp[4]);
+				if(isset($tmp[1])) $this->_MonatsArray[$i][14] = $tmp[1];
+				if(isset($tmp[2])) $this->_MonatsArray[$i][15] = floatval($tmp[2]); // Anzahl der Absenz
+				if(isset($tmp[3])) $this->_MonatsArray[$i][16] = $tmp[3];
+				if(isset($tmp[4])) $this->_MonatsArray[$i][17] = floatval($tmp[4]);
 			}
 			$tmp1 = 0;
 			// Liegen die Absenzen oder die Zeiten in der Zukunft, dann nicht berechnen
@@ -242,7 +242,9 @@ class time_month
 			//wenn absenz(15) == 1 Prozentual ausrechnen sowie tmp=0(nicht in der Zukunft)
 			if ($this->_MonatsArray[$i][15] == 1 and $tmp1 == 1) {
 				$this->_MonatsArray[$i][18] = round((floatval($this->_MonatsArray[$i][8]) - floatval($this->_MonatsArray[$i][13])) * floatval($this->_MonatsArray[$i][17]) / 100, 2);
-				$this->_MonatsArray[$i][15] = round((floatval($this->_MonatsArray[$i][8]) - floatval($this->_MonatsArray[$i][13])) / floatval($this->_MonatsArray[$i][8]), 2);
+				if(isset($this->_MonatsArray[$i][8]) && floatval($this->_MonatsArray[$i][8]) != 0){
+					$this->_MonatsArray[$i][15] = round((floatval($this->_MonatsArray[$i][8]) - floatval($this->_MonatsArray[$i][13])) / floatval($this->_MonatsArray[$i][8]), 2);
+				}
 				$this->_MonatsArray[$i][15] = round(floatval($this->_MonatsArray[$i][15]) * floatval($this->_MonatsArray[$i][4]), 2);
 				$saldo = floatval($this->_MonatsArray[$i][18]) + floatval($this->_MonatsArray[$i][13]);
 			}
