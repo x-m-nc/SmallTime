@@ -3,7 +3,7 @@
 /*******************************************************************************
  * Small Time allgemeine Funktionen
 /*******************************************************************************
- * Version 0.9.11
+ * Version 0.9.201
  * Author:  IT-Master
  * www.it-master.ch / info@it-master.ch
  * Copyright (c), IT-Master, All rights reserved
@@ -95,58 +95,64 @@ function create_htaccess($datenpfad)
 function write_htaccess_img($_file)
 {
 	$_zeilenvorschub = "\r\n";
-	$fp = fopen($_file, "a+");
-	fputs($fp, "Order deny,allow");
-	fputs($fp, $_zeilenvorschub);
-	fputs($fp, "Allow from all");
-	fputs($fp, $_zeilenvorschub);
-	fputs($fp, '<Files ~ "\.(jpg)$">');
-	fputs($fp, $_zeilenvorschub);
-	fputs($fp, "	order deny,allow");
-	fputs($fp, $_zeilenvorschub);
-	fputs($fp, "	allow from all");
-	fputs($fp, $_zeilenvorschub);
-	fputs($fp, "</Files>");
-	fputs($fp, $_zeilenvorschub);
-	fputs($fp, "Options -Indexes");
-	fputs($fp, $_zeilenvorschub);
-	//fputs($fp, "Allow from <127.0.0.1>");
-	//fputs($fp, $_zeilenvorschub);
-	fclose($fp);
-	$_datum = date("d.m.Y", time());
-	$_uhrzeit = date("H:i", time());
-	$_datetime =  $_datum . " - " . $_uhrzeit;
-	$_debug 	= new time_filehandle("./debug/", "time.txt", ";");
-	if (!isset($datenpfad) || $datenpfad != '') {
-		$datenpfad = "xxxxxx bug001";
+	$path = dirname($_file);
+	if (is_dir($path)) {
+		$fp = fopen($_file, "a+");
+		fputs($fp, "Order deny,allow");
+		fputs($fp, $_zeilenvorschub);
+		fputs($fp, "Allow from all");
+		fputs($fp, $_zeilenvorschub);
+		fputs($fp, '<Files ~ "\.(jpg)$">');
+		fputs($fp, $_zeilenvorschub);
+		fputs($fp, "	order deny,allow");
+		fputs($fp, $_zeilenvorschub);
+		fputs($fp, "	allow from all");
+		fputs($fp, $_zeilenvorschub);
+		fputs($fp, "</Files>");
+		fputs($fp, $_zeilenvorschub);
+		fputs($fp, "Options -Indexes");
+		fputs($fp, $_zeilenvorschub);
+		//fputs($fp, "Allow from <127.0.0.1>");
+		//fputs($fp, $_zeilenvorschub);
+		fclose($fp);
+		$_datum = date("d.m.Y", time());
+		$_uhrzeit = date("H:i", time());
+		$_datetime = $_datum . " - " . $_uhrzeit;
+		$_debug = new time_filehandle("./debug/", "time.txt", ";");
+		if (!isset($datenpfad) || $datenpfad != '') {
+			$datenpfad = "xxxxxx bug001";
+		}
+		$_debug->insert_line("Time;" . $_datetime . ";Fehler in time_funktion_pdf;193;" . $datenpfad . ";htaccess nicht vorhanden, wurde erstellt.");
 	}
-	$_debug->insert_line("Time;" . $_datetime . ";Fehler in time_funktion_pdf;193;" . $datenpfad . ";htaccess nicht vorhanden, wurde erstellt.");
 }
 
 
 function write_htaccess($_file)
 {
 	$_zeilenvorschub = "\r\n";
-	$fp = fopen($_file, "a+");
-	fputs($fp, "Order deny,allow");
-	fputs($fp, $_zeilenvorschub);
-	fputs($fp, "Allow from all");
-	fputs($fp, $_zeilenvorschub);
-	fputs($fp, '<Files "*">');
-	fputs($fp, $_zeilenvorschub);
-	fputs($fp, "	deny from all");
-	fputs($fp, $_zeilenvorschub);
-	fputs($fp, "</Files>");
-	fputs($fp, $_zeilenvorschub);
+	$path = dirname($_file);
+	if (is_dir($path)) {
+		$fp = fopen($_file, "a+");
+		fputs($fp, "Order deny,allow");
+		fputs($fp, $_zeilenvorschub);
+		fputs($fp, "Allow from all");
+		fputs($fp, $_zeilenvorschub);
+		fputs($fp, '<Files "*">');
+		fputs($fp, $_zeilenvorschub);
+		fputs($fp, "	deny from all");
+		fputs($fp, $_zeilenvorschub);
+		fputs($fp, "</Files>");
+		fputs($fp, $_zeilenvorschub);
 
-	//fputs($fp, "Allow from <127.0.0.1>");
-	//fputs($fp, $_zeilenvorschub);
-	fclose($fp);
-	$_datum = date("d.m.Y", time());
-	$_uhrzeit = date("H:i", time());
-	$_datetime =  $_datum . " - " . $_uhrzeit;
-	$_debug 	= new time_filehandle("./debug/", "time.txt", ";");
-	$_debug->insert_line("Time;" . $_datetime . ";Fehler in time_funktion_pdf;193;" . $datenpfad . ";htaccess nicht vorhanden, wurde erstellt.");
+		//fputs($fp, "Allow from <127.0.0.1>");
+		//fputs($fp, $_zeilenvorschub);
+		fclose($fp);
+		$_datum = date("d.m.Y", time());
+		$_uhrzeit = date("H:i", time());
+		$_datetime = $_datum . " - " . $_uhrzeit;
+		$_debug = new time_filehandle("./debug/", "time.txt", ";");
+		$_debug->insert_line("Time;" . $_datetime . ";Fehler in time_funktion_pdf;193;" . $datenpfad . ";htaccess nicht vorhanden, wurde erstellt.");
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -164,26 +170,26 @@ function check_htaccess($_file, $_rwo, $_text)
 		}
 
 		/*$_zeilenvorschub = "\r\n";
-		$fp = fopen($_file,"a+");
-		if($_rwo){
-			fputs($fp, "Order deny,allow");
-			fputs($fp, $_zeilenvorschub);
-			fputs($fp, "Allow from all");
-			fputs($fp, $_zeilenvorschub);
-			fputs($fp, '<Files "*">');
-			fputs($fp, $_zeilenvorschub);
-			fputs($fp, "	deny from all");
-			fputs($fp, $_zeilenvorschub);
-			fputs($fp, "</Files>");
-			fputs($fp, $_zeilenvorschub);	
-		}else{
-			fputs($fp, "Deny from all");	
-		}
-		fclose($fp);*/
+			  $fp = fopen($_file,"a+");
+			  if($_rwo){
+				  fputs($fp, "Order deny,allow");
+				  fputs($fp, $_zeilenvorschub);
+				  fputs($fp, "Allow from all");
+				  fputs($fp, $_zeilenvorschub);
+				  fputs($fp, '<Files "*">');
+				  fputs($fp, $_zeilenvorschub);
+				  fputs($fp, "	deny from all");
+				  fputs($fp, $_zeilenvorschub);
+				  fputs($fp, "</Files>");
+				  fputs($fp, $_zeilenvorschub);	
+			  }else{
+				  fputs($fp, "Deny from all");	
+			  }
+			  fclose($fp);*/
 		$_datum = date("d.m.Y", time());
 		$_uhrzeit = date("H:i", time());
-		$_datetime =  $_datum . " - " . $_uhrzeit;
-		$_debug 	= new time_filehandle("./debug/", "time.txt", ";");
+		$_datetime = $_datum . " - " . $_uhrzeit;
+		$_debug = new time_filehandle("./debug/", "time.txt", ";");
 		$_debug->insert_line("Time;" . $_datetime . ";Fehler in;" . $_file . ";" . $_text);
 	}
 }
